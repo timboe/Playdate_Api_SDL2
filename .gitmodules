@@ -1,0 +1,6 @@
+[submodule "YouCannotGoBack"]
+	path = YouCannotGoBack
+	url = https://github.com/timboe/YouCannotGoBack.git
+[submodule "PlaydateGameSelect"]
+	path = PlaydateGameSelect
+	url = https://github.com/timboe/PlaydateGameSelect.git
