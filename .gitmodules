@@ -4,3 +4,6 @@
 [submodule "PlaydateGameSelect"]
 	path = PlaydateGameSelect
 	url = https://github.com/timboe/PlaydateGameSelect.git
+[submodule "Cascada"]
+	path = Cascada
+	url = https://github.com/timboe/Cascada.git
