@@ -29,7 +29,8 @@ MASKPRIMITIVES ?= 1
 SRC_CPP_DIR = src/srcstub/sdl_rotate src/srcstub/gfx_primitives_surface src/srcstub/bump src/srcstub/bump/src src/srcstub src/srcstub/pd_api
 SRC_C_DIR = src/srcgame \
   src/srcgame_ycgb src/srcgame_ycgb/levels \
-  src/srcgame_cascada src/srcgame_cascada/chipmunk
+  src/srcgame_cascada src/srcgame_cascada/chipmunk \
+  src/srcgame_ff src/srcgame_ff/buildings src/srcgame_ff/ui
 OBJ_DIR = ./obj
 OUT_DIR = ./Source
 SOURCE_DIR = Source

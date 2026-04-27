@@ -7,3 +7,6 @@
 [submodule "Cascada"]
 	path = Cascada
 	url = https://github.com/timboe/Cascada.git
+[submodule "FactoryFarming"]
+	path = FactoryFarming
+	url = https://github.com/timboe/FactoryFarming.git
