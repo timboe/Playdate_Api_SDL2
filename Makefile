@@ -57,10 +57,48 @@ CPP = g++
 CPP_VERSION = c++17
 OUTPUT_ASSETS_DIR =
 CFLAGS = -D_USE_MATH_DEFINES -DSDL2API -DTARGET_EXTENSION -Wall -Wextra -Wno-unused-parameter -Wno-error=implicit-function-declaration
-LDFLAGS = -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2_gfx
+LDFLAGS = 
 CFLAGS_EXTRA = 
 LDFLAGS_EXTRA =
 LDUSEX11 = 1
+
+# Windows Cross-Compilation Settings
+ifeq ($(TARGET), windows)
+    # Ensure you have mingw-w64 installed
+    CC = x86_64-w64-mingw32-gcc
+    CPP = x86_64-w64-mingw32-g++
+    EXE = game.exe
+    LDUSEX11 = 0
+    
+    # Path to where you extracted the SDL2 MinGW development libraries
+    # Download from: https://github.com
+    SDL_WIN_PATH ?= /home/timboe/playdate/SDL2-2.30.12/x86_64-w64-mingw32
+    SDL_TTF_WIN_PATH ?= /home/timboe/playdate/SDL2_ttf-2.24.0/x86_64-w64-mingw32
+    SDL_MIXER_WIN_PATH ?= /home/timboe/playdate/SDL2_mixer-2.8.1/x86_64-w64-mingw32
+    SDL_IMAGE_WIN_PATH ?= /home/timboe/playdate/SDL2_image-2.8.10/x86_64-w64-mingw32
+    SDL_GFX_WIN_PATH ?= /home/timboe/playdate/mingw64
+
+    WIN_SYS_LIBS = -lkernel32 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lsetupapi -lversion -luuid
+    
+    # Override SDL2 flags for Windows
+    CFLAGS += -I$(SDL_WIN_PATH)/include/SDL2 -I$(SDL_TTF_WIN_PATH)/include/SDL2 \
+      -I$(SDL_MIXER_WIN_PATH)/include/SDL2 -I$(SDL_IMAGE_WIN_PATH)/include/SDL2 \
+      -I$(SDL_GFX_WIN_PATH)/include/SDL2 
+    # Order matters: mingw32 and SDL2main must come before SDL2
+    LDFLAGS += -L$(SDL_WIN_PATH)/lib -L$(SDL_TTF_WIN_PATH)/lib -L$(SDL_MIXER_WIN_PATH)/lib \
+      -L$(SDL_IMAGE_WIN_PATH)/lib -L$(SDL_GFX_WIN_PATH)/lib \
+      -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2_gfx $(WIN_SYS_LIBS) -mwindows
+
+    LDFLAGS += -static-libgcc -static-libstdc++
+else
+    # Standard Linux Flags
+    CFLAGS += `$(SDL2CONFIG) --cflags` $(CFLAGS_EXTRA)
+    LDFLAGS += `$(SDL2CONFIG) --libs` $(LDFLAGS_EXTRA) -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2_gfx
+endif
+
+ifneq ($(PLATFORM),)
+include build_platforms/$(PLATFORM).mk
+endif
 
 ifneq ($(PLATFORM),)
 include build_platforms/$(PLATFORM).mk
@@ -72,8 +110,8 @@ endif
 
 PLATFORM=msys_mingw
 
-CFLAGS += `$(SDL2CONFIG) --cflags` $(CFLAGS_EXTRA)
-LDFLAGS += `$(SDL2CONFIG) --libs` $(LDFLAGS_EXTRA)
+# CFLAGS += `$(SDL2CONFIG) --cflags` $(CFLAGS_EXTRA)
+# LDFLAGS += `$(SDL2CONFIG) --libs` $(LDFLAGS_EXTRA)
 
 #provide OUTPUT_ASSETS_DIR in <platform>.mk to convert audio to ogg
 ifneq ($(OUTPUT_ASSETS_DIR),)

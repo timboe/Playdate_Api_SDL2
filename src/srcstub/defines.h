@@ -36,5 +36,5 @@
 	#define MASKPRIMITIVES 1
 #endif
 #ifndef FILEPLAYER_WALLCLOCK_TRACKING
-	#define FILEPLAYER_WALLCLOCK_TRACKING 0  // Set to 1 to enable wall-clock based getOffset/isPlaying for FilePlayer
+	#define FILEPLAYER_WALLCLOCK_TRACKING 1  // Set to 1 to enable wall-clock based getOffset/isPlaying for FilePlayer
 #endif
