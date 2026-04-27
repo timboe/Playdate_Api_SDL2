@@ -9,6 +9,8 @@
 #ifndef pdext_sound_h
 #define pdext_sound_h
 
+#include <stdio.h>
+
 #if TARGET_EXTENSION
 
 #define AUDIO_FRAMES_PER_CYCLE 512
