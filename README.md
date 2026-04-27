@@ -7,7 +7,7 @@ It's probably done in a very bad way but it does seem to work for my games and o
 ## Implemented
 
 ### Graphics:
-- Bitmap operations — load (no gif), new, free, copy, clear, getBitmapData (converts to 1bpp), rotate, scale, tile, drawBitmap, drawScaledBitmap, drawRotatedBitmap, tileBitmap
+- Bitmap operations — load (gif if sdl2image is new enough), new, free, copy, clear, getBitmapData (converts to 1bpp), rotate, scale, tile, drawBitmap, drawScaledBitmap, drawRotatedBitmap, tileBitmap
 - Primitives — drawLine, fillRect, drawRect, fillTriangle, fillPolygon, drawEllipse, fillEllipse, drawRoundRect, fillRoundRect (all via drawBitmapAll)
 - Stencil — applied in drawBitmapAll (covers all primitives and bitmap drawing, but not fnt drawText)
 - getFrame / getDisplayFrame — (raw 1bpp frame buffer access implemented) 
@@ -22,7 +22,8 @@ It's probably done in a very bad way but it does seem to work for my games and o
 
 ### System: 
 - buttons
-- crank (simulated by 2 buttons rotating 5 degrees in a certain directions)
+- crank (simulated by 2 buttons rotating 5 degrees in a certain directions or controlled by a joystick)
+- setPeripheralsEnabled & Accelerometer (controlled by a joystick)
 - timer (elapsed/epoch/ms)
 - memory (realloc/formatString)
 - menu items (Fake menu system implemented with standard/checkmark/options/setMenuImage)
@@ -70,10 +71,9 @@ It's probably done in a very bad way but it does seem to work for my games and o
 
 ### System:
 - getLanguage — hardcoded English, ignores system locale
-- getAccelerometer
 - getBatteryPercentage / getBatteryVoltage — hardcoded 100% / 5.0V
 - getFlipped, getReduceFlashing — always 0
-- setPeripheralsEnabled, setAutoLockDisabled, clearICache — empty no-ops
+- setAutoLockDisabled, clearICache — empty no-ops
 - restartGame, getLaunchArgs, sendMirrorData, setSerialMessageCallback — empty/hardcoded
 
 ### Sound:
@@ -88,8 +88,8 @@ It's probably done in a very bad way but it does seem to work for my games and o
 - Network/HTTP — not present
 
 # how to
-1. place your playdate game's unaltered source code files inside src/srcgame
-2. place your playdate game's Source directory (containing assets) inside Source + make sure it contains a pdxinfo file with a bundleID set (it's used to determine unique save folder)
+1. place your playdate game's unaltered source code files inside src/srcgame (so the contents of your "src" folder)
+2. place your playdate game's Source directory (containing assets) inside Source (so the contents of your "Source" folder) + make sure it contains a pdxinfo file with a bundleID set (it's used to determine unique save folder)
 3. OPTIONALLY (fnt loading is now supported, ttf no longer required): Convert fonts (fnt+png) files to TTF files:
    by using [bitsnpicas](https://github.com/kreativekorp/bitsnpicas) to export to BDF file, 
    then open BDF file in [fontforge studio](https://fontforge.org/en-US/) and export to ttf. 
@@ -109,13 +109,43 @@ in order for this to work correctly you need to make sure that you implemented t
 It works by first calling kEventTerminate and then kEventInit again so you need to make sure that you also reset global variables inside kEventInit.
 you can also provide a colors.ini file to determine the colors used for black and white. You need to make sure that the clear color lies between black and white. For an example on this i suggest to check some of my playdate game repo's.
 
+## Simple palette swaps using only colors.ini
+Besides creating new assets folders you can also just created "SourceX" folders with a colors.ini for simple palette swaps. Here is an example palette swap for gameboy color graphics.
+The rules are that Black < BlachThreshold < Clear < Whitethreshold < White and the thresholds should be near the clear color.
+`pd_api_gfx_color_force_black_white=1` is what makes graphics be converted to 1 bit graphics setting it 0 will retain original assets like if you want to replace assets with colored assets but still use
+different colors for main api drawing functions
+
+```
+pd_api_gfx_color_clear_r=100
+pd_api_gfx_color_clear_g=110
+pd_api_gfx_color_clear_b=68
+pd_api_gfx_color_white_r=168
+pd_api_gfx_color_white_g=182
+pd_api_gfx_color_white_b=104
+pd_api_gfx_color_black_r=15
+pd_api_gfx_color_black_g=56
+pd_api_gfx_color_black_b=15
+pd_api_gfx_color_whitetreshold_r=102
+pd_api_gfx_color_whitetreshold_g=112
+pd_api_gfx_color_whitetreshold_b=70
+pd_api_gfx_color_blacktreshold_r=98
+pd_api_gfx_color_blacktreshold_g=108
+pd_api_gfx_color_blacktreshold_b=66
+pd_api_gfx_color_force_black_white=1
+
+```
+
 # credits
 - Playdate api headers (contained in PD_API directory) are copyright by panic inc
 - bump.hpp by Polynominal (https://github.com/Polynominal/bump.hpp)
 - nlohmann json (https://github.com/nlohmann/json)
 - menu system / code is based on cranked emulator implementation (https://github.com/TheLogicMaster/Cranked)
 
+# Showcase video
+[![Playdate SDL2 Api Showcase Video](http://img.youtube.com/vi/lm071qvq98k/0.jpg)](http://www.youtube.com/watch?v=0lm071qvq98k "Playdate SDL2 Api Showcase Video")
+
 # example games
 - collection of playdate games, including mine compiled with this api for html: https://joyrider3774.github.io/playdate_games_html/
 - Poker Poker Magic: https://rapcal.itch.io/poker-poker-magic
+
 
